@@ -27,17 +27,27 @@ function Todo({ todos, completeTodo, removeTodo, updateTodo }) {
             className={todo.isComplete ? "todo-row complete" : "todo-row"}
             key={index}
         >
-            <div key={todo.id} onClick={() => completeTodo(todo.id)}>
-                {todo.task}
+            <div key={todo.taskid} onClick={() => completeTodo(todo.taskid)}>
+                {todo.photo ? (
+                    <img
+                        src={`http://localhost:8081/tasks/${todo.photo}`}
+                        className="taskImg"
+                        alt="task"
+                    />
+                ) : (
+                    todo.task
+                )}
             </div>
             <div className="icons">
                 <RiCloseCircleLine
-                    onClick={() => removeTodo(todo.id)}
-                    class="delete-icon"
+                    onClick={() => removeTodo(todo.taskid)}
+                    className="delete-icon"
                 />
+
+                {/* change */}
                 <TiEdit
                     onClick={() => setEdit({ id: todo.id, value: todo.task })}
-                    class="edit-icon"
+                    className="edit-icon"
                 />
             </div>
         </div>

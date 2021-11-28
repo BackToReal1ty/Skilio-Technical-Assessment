@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NewTodo from "./NewTodo";
 import Todo from "./Todo";
+import axios from "axios";
 
 function TodoList() {
     const [todos, setTodos] = useState([]);
+
+    // get todo entries once on first render
+    useEffect(() => {
+        axios
+            .get("http://localhost:8081/tasks")
+            .then((response) => setTodos(response.data));
+    }, []);
 
     // adding new todo
     const addTodo = (todo) => {
@@ -11,27 +19,45 @@ function TodoList() {
             return;
         }
 
-        const newTodos = [todo, ...todos];
-
-        setTodos(newTodos);
-        console.log(todo, ...todos);
+        // send post requet to backend server
+        axios.post("http://localhost:8081/tasks", todo).then(() => {
+            console.log("successful post");
+            // send post requet to backend server
+            axios.get("http://localhost:8081/tasks").then((response) => {
+                setTodos(response.data);
+            });
+        });
     };
 
-    // marking todos as complete
-    const completeTodo = (id) => {
+    // marking existing todos as complete
+    const completeTodo = (taskid) => {
         let updatedTodos = todos.map((todo) => {
-            if (todo.id === id) {
+            if (todo.taskid === taskid) {
                 todo.isComplete = !todo.isComplete;
+
+                // send post requet to backend server
+                axios
+                    .put(`http://localhost:8081/tasks/${taskid}`, {
+                        isComplete: todo.isComplete,
+                    })
+                    .then(() => {
+                        console.log("successful post");
+                    });
             }
             return todo;
         });
         setTodos(updatedTodos);
     };
 
-    // marking todos as complete
-    const removeTodo = (id) => {
-        const removeArr = [...todos].filter((todo) => todo.id !== id);
+    // remove existing todos
+    const removeTodo = (taskid) => {
+        const removeArr = [...todos].filter((todo) => todo.taskid !== taskid);
         setTodos(removeArr);
+
+        // send delete requet to backend server
+        axios.delete(`http://localhost:8081/tasks/${taskid}`).then(() => {
+            console.log("successful delete");
+        });
     };
 
     // edit existing todos

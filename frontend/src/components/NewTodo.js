@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 
 function NewTodo(props) {
-    const [input, setInput] = useState("");
+    const [task, setTask] = useState("");
 
     const handleChange = (e) => {
-        setInput(e.target.value);
+        setTask(e.target.value);
     };
 
     const submit = (e) => {
         e.preventDefault();
 
         props.onSubmit({
-            id: Math.floor(Math.random() * 10000),
-            task: input,
+            task: task,
+            isComplete: false,
         });
 
-        setInput("");
+        setTask("");
     };
 
     return (
@@ -23,7 +23,7 @@ function NewTodo(props) {
             <input
                 type="text"
                 placeholder="Add a Todo"
-                value={input}
+                value={task}
                 name="task"
                 className="todo-input"
                 onChange={handleChange}

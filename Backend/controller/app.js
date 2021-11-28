@@ -93,12 +93,14 @@ app.put("/tasks/:id", uploadTaskImg.single("photo"), function (req, res) {
 
     // prevent taskid and date from being changed
     if (req.body.taskid || req.body.date) {
-        // remove uploaded photo
-        try {
-            fs.unlinkSync(`./public/taskimg/${req.file.filename}`);
-            //file removed
-        } catch (err) {
-            console.error(err);
+        if (req.file != undefined) {
+            // remove uploaded photo
+            try {
+                fs.unlinkSync(`./public/taskimg/${req.file.filename}`);
+                //file removed
+            } catch (err) {
+                console.error(err);
+            }
         }
         res.status(500).send(); // send error with status code
     } else {
