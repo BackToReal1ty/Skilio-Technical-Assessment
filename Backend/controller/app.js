@@ -11,7 +11,10 @@ const fs = require("fs");
 const storageTaskImg = multer.diskStorage({
     destination: "./public/taskimg/",
     filename: (req, file, callback) => {
-        return callback(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
+        return callback(
+            null,
+            `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
+        );
     },
 });
 
@@ -48,9 +51,9 @@ const task = require("../model/task.js");
 //
 
 // get all tasks: GET /tasks
-app.get("/tasks", function(req, res) {
+app.get("/tasks", function (req, res) {
     // call getTask from task.js to query sql database
-    task.getTask(function(err, result) {
+    task.getTask(function (err, result) {
         if (!err) {
             res.status(200).json(result); // send response with status code
         } else {
@@ -60,14 +63,14 @@ app.get("/tasks", function(req, res) {
 });
 
 // post new task: POST /tasks
-app.post("/tasks", uploadTaskImg.single("photo"), function(req, res) {
+app.post("/tasks", uploadTaskImg.single("photo"), function (req, res) {
     // add new filename to req.body
     if (req.file != undefined) {
         req.body.photo = req.file.filename;
     }
 
     // call createTask from task.js to query sql database
-    task.createTask(req.body, function(err, result) {
+    task.createTask(req.body, function (err, result) {
         if (!err) {
             // send response with status code
             res.status(201).header("Content-Type", "application/json").json({
@@ -85,12 +88,12 @@ app.post("/tasks", uploadTaskImg.single("photo"), function(req, res) {
 });
 
 // update existing task: PUT /tasks/id
-app.put("/tasks/:id", uploadTaskImg.single("photo"), function(req, res) {
+app.put("/tasks/:id", uploadTaskImg.single("photo"), function (req, res) {
     var id = req.params.id; // get id parameter from url
 
     // prevent taskid and date from being changed
     if (req.body.taskid || req.body.date) {
-        // remove uploaded photo 
+        // remove uploaded photo
         try {
             fs.unlinkSync(`./public/taskimg/${req.file.filename}`);
             //file removed
@@ -105,7 +108,7 @@ app.put("/tasks/:id", uploadTaskImg.single("photo"), function(req, res) {
         }
 
         // call updateTask from task.js to query sql database
-        task.updateTask(req.body, id, function(err, result) {
+        task.updateTask(req.body, id, function (err, result) {
             if (!err) {
                 res.status(204).send("Success"); // send response with status code
             } else {
@@ -116,10 +119,10 @@ app.put("/tasks/:id", uploadTaskImg.single("photo"), function(req, res) {
 });
 
 // delete existing task: DELETE /tasks/id
-app.delete("/tasks/:id", function(req, res) {
+app.delete("/tasks/:id", function (req, res) {
     var id = req.params.id; // get id parameter from url
     // call deleteTask from movie.js to query sql database
-    task.deleteTask(id, function(err, result) {
+    task.deleteTask(id, function (err, result) {
         if (!err) {
             if (result.affectedRows == 0) {
                 res.status(500).send();
@@ -133,7 +136,7 @@ app.delete("/tasks/:id", function(req, res) {
 });
 
 // 404
-app.all("*", function(req, res) {
+app.all("*", function (req, res) {
     res.status(404).send();
 });
 
