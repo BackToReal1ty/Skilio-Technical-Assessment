@@ -1,54 +1,68 @@
-import React, { useState } from "react";
-import { RiCloseCircleLine } from "react-icons/ri";
-import { TiEdit } from "react-icons/ti";
-import NewTodo from "./NewTodo";
+import React, {useState} from "react";
+import {RiCloseCircleLine, RiCheckFill} from "react-icons/ri";
 
-function Todo({ todos, completeTodo, removeTodo, updateTodo }) {
+function Todo({todos, completeTodo, removeTodo, updateTask}) {
     const [edit, setEdit] = useState({
-        id: null,
-        value: "",
+        taskid: null,
+        task: "",
     });
 
-    const submitUpdate = (value) => {
-        updateTodo(edit.id, value);
+    // submit changes for todo edits
+    const submitUpdate = () => {
+        // call updateTask to update the task
+        updateTask(edit.taskid, edit.task);
+
         setEdit({
-            id: null,
-            value: "",
+            taskid: null,
+            task: "",
         });
     };
 
-    if (edit.id) {
-        return <NewTodo edit={edit} onSubmit={submitUpdate} />;
-    }
+    const handleChange = (e) => {
+        setEdit({taskid: edit.taskid, task: e.target.value});
+    };
+
+    // render input box on double click
+    const renderTaskEditView = (todo) => {
+        return (
+            <div className="todoTask">
+                <input type="text" defaultValue={todo.task} onChange={handleChange} className="edit-input"></input>
+                <button onClick={() => setEdit({taskid: null, task: ""})} className="edit-cancel">
+                    <RiCloseCircleLine className="edit-cancel-icon" />
+                </button>
+                <button onClick={submitUpdate} className="edit-submit">
+                    <RiCheckFill className="edit-submit-icon" />
+                </button>
+            </div>
+        );
+    };
+
+    // render default task view
+    const renderTaskView = (todo) => {
+        return (
+            <div className="todoTask" onDoubleClick={() => setEdit({taskid: todo.taskid, task: todo.task})}>
+                {todo.task}
+            </div>
+        );
+    };
 
     return todos.map((todo, index) => (
         // todo container
-        <div
-            className={todo.isComplete ? "todo-row complete" : "todo-row"}
-            key={index}
-        >
-            <div key={todo.taskid} onClick={() => completeTodo(todo.taskid)}>
+        <div className={todo.isComplete ? "todo-row complete" : "todo-row"} key={index}>
+            <div key={todo.taskid}>
                 {todo.photo ? (
-                    <img
-                        src={`http://localhost:8081/tasks/${todo.photo}`}
-                        className="taskImg"
-                        alt="task"
-                    />
+                    <div className="todoImg">
+                        <img src={`http://localhost:8081/tasks/${todo.photo}`} className="taskImg" alt="task" />
+                    </div>
+                ) : edit.taskid === todo.taskid ? (
+                    renderTaskEditView(todo)
                 ) : (
-                    todo.task
+                    renderTaskView(todo)
                 )}
             </div>
             <div className="icons">
-                <RiCloseCircleLine
-                    onClick={() => removeTodo(todo.taskid)}
-                    className="delete-icon"
-                />
-
-                {/* change */}
-                <TiEdit
-                    onClick={() => setEdit({ id: todo.id, value: todo.task })}
-                    className="edit-icon"
-                />
+                <RiCloseCircleLine onClick={() => removeTodo(todo.taskid)} className="delete-icon" />
+                <RiCheckFill onClick={() => completeTodo(todo.taskid)} className="complete-icon" />
             </div>
         </div>
     ));

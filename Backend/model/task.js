@@ -8,8 +8,7 @@ module.exports = {
             if (err) {
                 return callback(err, null);
             } else {
-                const sql =
-                    "SELECT taskid, task, description, photo, date FROM task;";
+                const sql = "SELECT taskid, task, photo, date FROM task;";
                 dbConn.query(sql, (error, results) => {
                     dbConn.end();
                     if (error) {
@@ -81,21 +80,17 @@ module.exports = {
                             .map((key) => `${key} = ?`)
                             .join(", ") +
                         " WHERE taskid = ?";
-                    dbConn.query(
-                        sql,
-                        [...Object.values(update), taskid],
-                        (error, results) => {
-                            dbConn.end();
-                            if (error) {
-                                console.log("[UPDATETASK] Error!", error);
-                                return callback(error, null);
-                            } else {
-                                content_updated = true;
-                                console.log("[UPDATETASK] Success!");
-                                return callback(null, results);
-                            }
+                    dbConn.query(sql, [...Object.values(update), taskid], (error, results) => {
+                        dbConn.end();
+                        if (error) {
+                            console.log("[UPDATETASK] Error!", error);
+                            return callback(error, null);
+                        } else {
+                            content_updated = true;
+                            console.log("[UPDATETASK] Success!");
+                            return callback(null, results);
                         }
-                    );
+                    });
                 } else {
                     console.log("[UPDATETASK] Success!");
                     return callback(null);

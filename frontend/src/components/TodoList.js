@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import NewTodo from "./NewTodo";
 import Todo from "./Todo";
 import axios from "axios";
@@ -8,9 +8,7 @@ function TodoList() {
 
     // get todo entries once on first render
     useEffect(() => {
-        axios
-            .get("http://localhost:8081/tasks")
-            .then((response) => setTodos(response.data));
+        axios.get("http://localhost:8081/tasks").then((response) => setTodos(response.data));
     }, []);
 
     // adding new todo
@@ -22,7 +20,7 @@ function TodoList() {
         // send post requet to backend server
         axios.post("http://localhost:8081/tasks", todo).then(() => {
             console.log("successful post");
-            // send post requet to backend server
+            // send get requet to backend server
             axios.get("http://localhost:8081/tasks").then((response) => {
                 setTodos(response.data);
             });
@@ -60,27 +58,27 @@ function TodoList() {
         });
     };
 
-    // edit existing todos
-    const updateTodo = (todoId, newValue) => {
-        if (!newValue.task || /^\s*$/.test(newValue.task)) {
+    // edit existing todo task
+    const updateTask = (todoId, newValue) => {
+        if (!newValue || /^\s*$/.test(newValue)) {
             return;
         }
-
-        setTodos((prev) =>
-            prev.map((item) => (item.id === todoId ? newValue : item))
-        );
+        console.log(newValue);
+        // send put request to backend server
+        axios.put(`http://localhost:8081/tasks/${todoId}`, {task: newValue}).then(() => {
+            console.log("successful put");
+            // send get requet to backend server
+            axios.get("http://localhost:8081/tasks").then((response) => {
+                setTodos(response.data);
+            });
+        });
     };
 
     return (
         <div>
             <h1>Whats the plan for today?</h1>
             <NewTodo onSubmit={addTodo} />
-            <Todo
-                todos={todos}
-                completeTodo={completeTodo}
-                removeTodo={removeTodo}
-                updateTodo={updateTodo}
-            />
+            <Todo todos={todos} completeTodo={completeTodo} removeTodo={removeTodo} updateTask={updateTask} />
         </div>
     );
 }
