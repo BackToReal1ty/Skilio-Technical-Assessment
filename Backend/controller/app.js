@@ -11,10 +11,7 @@ const fs = require("fs");
 const storageTaskImg = multer.diskStorage({
     destination: "./public/taskimg/",
     filename: (req, file, callback) => {
-        return callback(
-            null,
-            `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
-        );
+        return callback(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
     },
 });
 
@@ -35,7 +32,7 @@ const uploadTaskImg = multer({
 
 // express settings
 app.use(express.json()); //parse json input
-app.use(express.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
+app.use(express.urlencoded({extended: false})); // parse application/x-www-form-urlencoded
 app.options("*", cors());
 app.use(cors());
 app.use("/tasks", express.static("public/taskimg")); // serve taskimg photos on /tasks
@@ -57,7 +54,7 @@ app.get("/tasks", function (req, res) {
         if (!err) {
             res.status(200).json(result); // send response with status code
         } else {
-            res.status(500).json({ Result: "Internal Error" }); // send error with status code
+            res.status(500).json({Result: "Internal Error"}); // send error with status code
         }
     });
 });
@@ -132,7 +129,7 @@ app.delete("/tasks/:id", function (req, res) {
                 res.status(204).send(); // send response with status code
             }
         } else {
-            res.status(500).json({ Result: "Internal Error" }); // send error with status code
+            res.status(500).json({Result: "Internal Error"}); // send error with status code
         }
     });
 });

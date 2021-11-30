@@ -13,12 +13,27 @@ function TodoList() {
 
     // adding new todo
     const addTodo = (todo) => {
-        if (!todo.task || /^\s*$/.test(todo.task)) {
+
+        // return and cancel if todo.task is blank 
+        if ((!todo.task && todo.photo === null) || /^\s*$/.test(todo.task)) {
             return;
         }
 
-        // send post requet to backend server
-        axios.post("http://localhost:8081/tasks", todo).then(() => {
+        // create new formdata object 
+        let fd = new FormData();    
+
+
+        // populate formdata object accordingly
+        if (!todo.task) {
+            fd.append("photo", todo.photo);
+            fd.append("isComplete", todo.isComplete);
+        } else {
+            fd.append("task", todo.task);
+            fd.append("isComplete", todo.isComplete);
+        }
+
+        // send post request with formdata to backend server
+        axios.post("http://localhost:8081/tasks", fd).then(() => {
             console.log("successful post");
             // send get requet to backend server
             axios.get("http://localhost:8081/tasks").then((response) => {
@@ -33,7 +48,7 @@ function TodoList() {
             if (todo.taskid === taskid) {
                 todo.isComplete = !todo.isComplete;
 
-                // send post requet to backend server
+                // send post request to backend server
                 axios
                     .put(`http://localhost:8081/tasks/${taskid}`, {
                         isComplete: todo.isComplete,
