@@ -72,7 +72,9 @@ function NewTodo(props) {
             <label for="todo-file">
                 <RiImageAddFill size="3em" />
             </label>
-            <button className="todo-submit">Add Todo</button>
+            <button className="todo-submit" style={{backgroundColor: file.photo ? "rgba(50, 205, 50, 50%)" : "white"}}>
+                Add Todo
+            </button>
         </form>
     );
 }
