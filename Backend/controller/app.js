@@ -1,4 +1,4 @@
-// import requiered dependancies
+// import requiered packages
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const multer = require("multer");
 const fs = require("fs");
+const rfs = require("rotating-file-stream");
+const morgan = require("morgan");
 
 // multer options
 const storageTaskImg = multer.diskStorage({
@@ -24,6 +26,20 @@ const filterImg = (req, file, callback) => {
     }
 };
 
+// logging options
+const appLogStream = rfs.createStream("log", {
+    interval: `7d`,
+    path: path.join(__dirname, "log"),
+});
+
+// storing to log file
+app.use(
+    "/",
+    morgan(":date HTTP :http-version :url FROM :remote-addr", {
+        stream: appLogStream,
+    })
+);
+
 // allow image files to be uploaded
 const uploadTaskImg = multer({
     storage: storageTaskImg,
@@ -37,16 +53,10 @@ app.options("*", cors());
 app.use(cors());
 app.use("/tasks", express.static("public/taskimg")); // serve taskimg photos on /tasks
 
-// jwt encryption secret
-const JWT_SECRET = require("../config.js");
-
 // import model
 const task = require("../model/task.js");
 
-//
-// ENDPOINTS
-//
-
+// <-- Endpoints -->
 // get all tasks: GET /tasks
 app.get("/tasks", function (req, res) {
     // call getTask from task.js to query sql database

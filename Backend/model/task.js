@@ -1,4 +1,5 @@
 var db = require("./databaseConfig.js");
+const fs = require("fs");
 
 module.exports = {
     // get all tasks: GET /tasks
@@ -107,16 +108,50 @@ module.exports = {
                 console.log(err);
                 return callback(err, null);
             } else {
-                const sql = "DELETE FROM task WHERE taskid = ?";
+                // check if task has a photo
+                const sql = "SELECT photo FROM task WHERE taskid = ?";
                 dbConn.query(sql, [taskid], (error, results) => {
-                    dbConn.end();
                     if (error) {
                         console.log(error);
                         console.log("[DELETETASK] Error!", error);
                         return callback(error, null);
                     } else {
-                        console.log("[DELETETASK] Success!");
-                        return callback(null, results);
+                        // remove sql entry
+                        if (results == "") {
+                            const sql = "DELETE FROM task WHERE taskid = ?";
+                            dbConn.query(sql, [taskid], (error, results) => {
+                                dbConn.end();
+                                if (error) {
+                                    console.log(error);
+                                    console.log("[DELETETASK] Error!", error);
+                                    return callback(error, null);
+                                } else {
+                                    console.log("[DELETETASK] Success!");
+                                    return callback(null, results);
+                                }
+                            });
+
+                            // delete photo file in filesystem and remove sql entry
+                        } else {
+                            try {
+                                fs.unlinkSync(`./public/taskimg/${results[0].photo}`);
+                                //file removed
+                            } catch (err) {
+                                console.error(err);
+                            }
+                            const sql = "DELETE FROM task WHERE taskid = ?";
+                            dbConn.query(sql, [taskid], (error, results) => {
+                                dbConn.end();
+                                if (error) {
+                                    console.log(error);
+                                    console.log("[DELETETASK] Error!", error);
+                                    return callback(error, null);
+                                } else {
+                                    console.log("[DELETETASK] Success!");
+                                    return callback(null, results);
+                                }
+                            });
+                        }
                     }
                 });
             }
