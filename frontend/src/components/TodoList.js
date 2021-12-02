@@ -13,15 +13,13 @@ function TodoList() {
 
     // adding new todo
     const addTodo = (todo) => {
-
-        // return and cancel if todo.task is blank 
+        // return and cancel if todo.task is blank
         if ((!todo.task && todo.photo === null) || /^\s*$/.test(todo.task)) {
             return;
         }
 
-        // create new formdata object 
-        let fd = new FormData();    
-
+        // create new formdata object
+        let fd = new FormData();
 
         // populate formdata object accordingly
         if (!todo.task) {
@@ -34,8 +32,7 @@ function TodoList() {
 
         // send post request with formdata to backend server
         axios.post("http://localhost:8081/tasks", fd).then(() => {
-            console.log("successful post");
-            // send get requet to backend server
+            // send get request to backend server
             axios.get("http://localhost:8081/tasks").then((response) => {
                 setTodos(response.data);
             });
@@ -49,13 +46,9 @@ function TodoList() {
                 todo.isComplete = !todo.isComplete;
 
                 // send post request to backend server
-                axios
-                    .put(`http://localhost:8081/tasks/${taskid}`, {
-                        isComplete: todo.isComplete,
-                    })
-                    .then(() => {
-                        console.log("successful post");
-                    });
+                axios.put(`http://localhost:8081/tasks/${taskid}`, {
+                    isComplete: todo.isComplete,
+                });
             }
             return todo;
         });
@@ -68,9 +61,7 @@ function TodoList() {
         setTodos(removeArr);
 
         // send delete requet to backend server
-        axios.delete(`http://localhost:8081/tasks/${taskid}`).then(() => {
-            console.log("successful delete");
-        });
+        axios.delete(`http://localhost:8081/tasks/${taskid}`);
     };
 
     // edit existing todo task
@@ -78,10 +69,8 @@ function TodoList() {
         if (!newValue || /^\s*$/.test(newValue)) {
             return;
         }
-        console.log(newValue);
         // send put request to backend server
         axios.put(`http://localhost:8081/tasks/${todoId}`, {task: newValue}).then(() => {
-            console.log("successful put");
             // send get requet to backend server
             axios.get("http://localhost:8081/tasks").then((response) => {
                 setTodos(response.data);
@@ -91,9 +80,15 @@ function TodoList() {
 
     return (
         <div>
-            <h1>Whats the plan for today?</h1>
-            <NewTodo onSubmit={addTodo} />
-            <Todo todos={todos} completeTodo={completeTodo} removeTodo={removeTodo} updateTask={updateTask} />
+            <header>
+                <h1>React To-Do List</h1>
+                by Isaac Ang
+                <NewTodo onSubmit={addTodo} />
+            </header>
+
+            <div className="todo-list">
+                <Todo todos={todos} completeTodo={completeTodo} removeTodo={removeTodo} updateTask={updateTask} />
+            </div>
         </div>
     );
 }

@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {RiImageAddFill} from "react-icons/ri";
 
 function NewTodo(props) {
     const [task, setTask] = useState("");
@@ -7,15 +8,31 @@ function NewTodo(props) {
         photo: null,
     });
 
+    // handle change for text input
     const handleChange = (e) => {
         setTask(e.target.value);
     };
 
     // handle if file is uploaded
     const handleFile = (e) => {
+        // frontend filtering of file types
+        if (
+            e.target.files[0].type !== "image/png" &&
+            e.target.files[0].type !== "image/jpg" &&
+            e.target.files[0].type !== "image/jpeg" &&
+            e.target.files[0].type !== "image/gif"
+        ) {
+            alert("Only PNG/JPG/GIF files are accepted!");
+            return;
+        }
+
+        // set state of file
         setFile({
             photo: e.target.files[0],
         });
+
+        // responsse if file accepted
+        alert(`${e.target.files[0].name} selected`);
     };
 
     const submit = (e) => {
@@ -51,7 +68,10 @@ function NewTodo(props) {
                 className="todo-input"
                 onChange={handleChange}
             ></input>
-            <input type="file" name="photo" className="todo-file" onChange={handleFile} />
+            <input type="file" name="photo" id="todo-file" onChange={handleFile} accept="image/*" />
+            <label for="todo-file">
+                <RiImageAddFill size="3em" />
+            </label>
             <button className="todo-submit">Add Todo</button>
         </form>
     );

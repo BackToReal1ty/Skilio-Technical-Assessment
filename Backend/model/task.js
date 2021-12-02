@@ -8,7 +8,7 @@ module.exports = {
             if (err) {
                 return callback(err, null);
             } else {
-                const sql = "SELECT taskid, task, photo, date FROM task;";
+                const sql = "SELECT * FROM task;";
                 dbConn.query(sql, (error, results) => {
                     dbConn.end();
                     if (error) {

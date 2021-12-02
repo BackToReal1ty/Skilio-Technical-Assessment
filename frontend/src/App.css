@@ -1,38 +1,136 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+header {
+    text-align: center;
+}
+
+.todo-list {
+    padding: 3em;
+    display: grid;
+    grid-gap: 2em;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.todo-cell {
+    background-color: rgba(255, 0, 0, 50%);
+    border-radius: 10px;
+    padding: 1em;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    text-align: center;
+}
+
+.todo-cell.complete {
+    background-color: rgba(0, 255, 0, 50%);
+    border-radius: 10px;
+    padding: 1em;
+    box-shadow: 0px, 10px, 5px #b2bec3;
+    text-align: center;
+}
+
+.todo-cell img {
+    max-width: 100%;
+}
+
+.todo-cell .actions button {
+    margin-top: 1em;
+    border-color: transparent;
+}
+
+.todo-cell .delete-icon {
+    margin-right: 0.5em;
+}
+
+.todo-cell .submit-icon {
+    margin-left: 0.5em;
+}
+
+.todo-task input {
+    width: 50%;
+}
+
+.todo-task button {
+    background-color: white;
+    border-color: transparent;
+}
+
+.todo-content {
+    display: flex;
+    align-items: center;
+}
+.todo-form {
+  padding: 2rem;
+}
+.todo-form .todo-input {
+    height: 3em;
+    padding: 0.5em;
+}
+
+.todo-form #todo-file {
+    display: none;
+}
+
+.todo-form label {
+    height: 100%;
+    padding: 1em;
+    cursor: pointer;
+}
+
+.todo-form button {
+    appearance: none;
+    background-color: #fafbfc;
+    border: 1px solid rgba(27, 31, 35, 0.2);
+    border-radius: 6px;
+    box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+    color: #24292e;
+    font-size: 14px;
+    font-weight: 500;
+    list-style: none;
+    padding: 6px 16px;
+    position: relative;
+    transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+    user-select: none;
+    vertical-align: middle;
+    height: 2.5rem;
+}
+
+.todo-form button:hover {
+    background-color: #f3f4f6;
+    transition-duration: 0.1s;
 }

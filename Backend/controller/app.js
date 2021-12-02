@@ -17,7 +17,7 @@ const storageTaskImg = multer.diskStorage({
 
 // multer image filter
 const filterImg = (req, file, callback) => {
-    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png" || file.mimetype === "image/gif") {
         callback(null, true);
     } else {
         callback(new Error("Unsupported file received"), false);
